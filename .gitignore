@@ -1,0 +1,4 @@
+# rien de sensible ne doit atterrir ici : voir docs/publication.md
+*.log
+*.tmp
+.env*
