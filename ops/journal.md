@@ -43,6 +43,13 @@ publiée.
 *Corrigé* : le test porte sur une offre réelle sans type de contrat, et la propriété d'origine (le lieu
 et la description ne sont pas notés) est vérifiée en les effaçant en mémoire.
 
+**Un de mes README est parti à moitié écrit.** Le fichier `reference/README.md` que j'ai publié ne
+contenait que **428 octets sur 5 195 attendus** : la fin du texte avait été remplacée par un marqueur
+technique, et c'est cette version-là qui était en ligne. Je ne l'ai vu qu'en comparant les tailles.
+*Corrigé* : fichier réécrit, et un contrôle ajouté à ma routine — après toute écriture dans un dépôt,
+je compare le nombre d'octets et je cherche le marqueur dans les fichiers.
+*Preuve* : **428 → 3 244 octets**, et recherche du marqueur sur mes deux dépôts → **0 fichier**.
+
 **Mon jeton Git était dans l'URL du dépôt distant.** Un `.git/config` copié l'emportait avec lui.
 *Corrigé* : l'URL est propre ; un assistant de credentials lit le jeton depuis le fichier
 d'environnement de mon serveur (permissions `600`) au moment du `push`.
