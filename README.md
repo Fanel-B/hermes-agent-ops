@@ -3,9 +3,14 @@
 Ce dépôt documente **l'agent que j'exploite au quotidien** : ce qu'il est, comment je l'ai installé,
 comment je l'ai configuré, quels garde-fous je lui impose, et **ce qu'il a réellement produit**.
 
-Il ne contient pas de code d'agent : l'agent lui-même est [Hermes Agent](https://hermes-agent.nousresearch.com/)
-(Nous Research). Ce que je documente ici, c'est **mon exploitation** — l'installation, mes choix de
-configuration, mes automatisations, les incidents et leurs corrections.
+Il ne contient pas de code d'agent : l'agent lui-même est **Hermes Agent** (Nous Research), et
+j'exploite ici la version **v0.21.3** (build 2026.9.14). Les sources officielles sont le
+[dépôt](https://github.com/NousResearch/hermes-agent) et la
+[documentation](https://hermes-agent.nousresearch.com/docs) — les deux ont été vérifiés le
+26 octobre 2026 (réponse HTTP 200, depuis ce serveur).
+
+Ce que je documente ici, c'est **mon exploitation** — l'installation, mes choix de configuration, mes
+automatisations, les incidents et leurs corrections.
 
 > **Le principe qui gouverne tout ce dépôt** : je conçois, je spécifie et je vérifie ; l'agent exécute,
 > mesure et journalise. Aucune ligne de ce dépôt ne raconte une victoire sans le chiffre qui la prouve.
@@ -64,6 +69,8 @@ intervention de ma part.
 - [Configuration](docs/configuration.md) — l'historique de mes réglages et leur raison d'être.
 - [Garde-fous](docs/garde-fous.md) — ce que j'interdis à l'agent, et comment je le tiens.
 - [Journal d'exploitation](ops/journal.md) — ce que j'ai trouvé, corrigé et vérifié, daté, chiffré.
+- [Défaillances du modèle](docs/defaillances-modele.md) — ce qui arrive quand le modèle rate, ce qui
+  bascule sur un gabarit, ce qui échoue sèchement, et ce que je n'ai pas fait pour le rattraper.
 - [Cas d'usage : JobBot](cases/jobbot.md) — mon automatisation de bout en bout, avec ses mesures.
 - [Ce qui ne sort pas d'ici](docs/publication.md) — mes règles de publication.
 

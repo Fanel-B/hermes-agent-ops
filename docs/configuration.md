@@ -8,9 +8,23 @@ quelle alternative existait, et ce que ça a coûté.
 - **Défaut** : un modèle rapide et bon marché (`deepseek/deepseek-v4.1-flash` via OpenRouter), parce
   que l'immense majorité des tours sont courts : lire un fichier, lancer un script, formater un
   message.
-- **Routage par tâche** : les analyses longues partent sur un modèle à grand contexte, le scoring
-  complexe sur un modèle de raisonnement, et les documents importants (CV, lettre, texte public)
-  sont confiés à un modèle plus fort, appelé explicitement.
+- **Un seul modèle est déclaré dans la configuration** : `deepseek/deepseek-v4.1-flash` via OpenRouter.
+  Le reste n'est pas un mécanisme mais une **convention que j'applique moi-même**, en choisissant au
+  moment de la tâche (analyse longue, raisonnement, rédaction).
+- **Correction du 26 octobre 2026.** Ce document affirmait que « les documents importants sont confiés
+  à un modèle plus fort, appelé explicitement ». C'est faux sur le chemin qui compte :
+  `cv_generator.py` et `lettre_generator.py` lancent
+  `claude -p … --output-format text --max-turns 3|6`, **sans `--model` et sans température**. Le modèle
+  est donc celui par défaut de la CLI : il n'est ni fixé, ni journalisé, et je ne peux pas prouver après
+  coup quel modèle a écrit un document. J'ai corrigé la phrase plutôt que de la garder.
+- **Ce qui rendrait la phrase vraie** : passer `--model` explicitement et journaliser le modèle avec
+  chaque document produit. C'est un changement de code, pas de rédaction.
+- **État au 26 octobre 2026** : la CLI `claude` ne s'authentifie plus (« session OAuth expirée ») — la
+  génération de nouveaux documents est donc indisponible jusqu'à ré-authentification. Voir
+  [défaillances du modèle](defaillances-modele.md).
+- **Coût mesuré** (26 octobre 2026) : **13,99 $ consommés sur 15 $ achetés** chez OpenRouter depuis la
+  mise en service (35 jours), soit environ **0,40 $ par jour**. La répartition par famille de tâches
+  est **non mesurable** — voir [défaillances du modèle](defaillances-modele.md).
 - **Pourquoi** : payer le prix d'un grand modèle pour répondre « oui, le test passe » est du
   gaspillage ; l'utiliser pour rédiger une lettre de motivation ne l'est pas.
 

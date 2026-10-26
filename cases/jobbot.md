@@ -30,7 +30,12 @@ rien qui ne soit pas vérifié.
 - **403 contrôles** automatiques côté pipeline, **201 tests** côté site ;
 - **4 familles de sources**, toutes publiques : interfaces des entreprises (Airbus, Thales, Sopra
   Steria, SII, Capgemini, Atos, CNES), service public de l'apprentissage, France Travail, et les
-  alertes e-mail que le candidat reçoit lui-même (lues en lecture seule).
+  alertes e-mail que je reçois moi-même (lues en lecture seule).
+
+**Ce que l'écart entre ces deux chiffres veut dire** : **546 annonces collectées**, **290 publiées**.
+  La différence n'est pas une perte, c'est un filtre — hors zone, hors fenêtre de dates, doublon d'une
+  autre source, type de contrat introuvable, diplôme exigé hors de ma portée. La base garde tout ; le
+  site ne publie que ce qui est présentable avec sa justification.
 
 ## Les trois défauts que ce projet a révélés
 

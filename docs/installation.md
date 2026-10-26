@@ -10,7 +10,17 @@ sont décrites **par leur rôle**, jamais recopiées.
 - **Python 3.14** (système), **Node 26** (installé à part, dans `~/.hermes/node/`, pour que le site
   et ses outils ne dépendent pas des paquets du système).
 - Accès `sudo` sans mot de passe pour l'utilisateur de service : l'agent peut redémarrer un service
-  qu'il a lui-même reconstruit, sans qu'une intervention humaine soit nécessaire à 3 h du matin.
+  qu'il a lui-même reconstruit, sans intervention humaine à 3 h du matin.
+- **Sa portée réelle, mesurée le 26 octobre 2026** : `(ALL) NOPASSWD: ALL`, donc **toutes** les
+  commandes, et pas seulement celles de service. Le contrôle qui pourrait compenser n'est pas en place
+  non plus : l'authentification SSH par mot de passe est **ouverte**
+  (`PasswordAuthentication yes`) et le compte `ubuntu` porte un mot de passe actif (deux clés
+  autorisées par ailleurs, et `PermitRootLogin prohibit-password`).
+- **Ce que j'en fais** : une faiblesse assumée et datée, pas une bonne pratique. Deux corrections
+  possibles, **aucune appliquée à ce jour** : restreindre le fichier `sudoers` aux commandes réellement
+  utilisées (redémarrage du service du site), et fermer l'authentification par mot de passe après avoir
+  vérifié que l'accès par clé fonctionne. La seconde touche à mon propre accès à la machine : elle ne se
+  décide pas sans son propriétaire.
 
 ## 1. L'agent
 
