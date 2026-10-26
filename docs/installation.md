@@ -9,18 +9,25 @@ sont décrites **par leur rôle**, jamais recopiées.
   tourner en continu une passerelle, des tâches planifiées et une construction de site.
 - **Python 3.14** (système), **Node 26** (installé à part, dans `~/.hermes/node/`, pour que le site
   et ses outils ne dépendent pas des paquets du système).
-- Accès `sudo` sans mot de passe pour l'utilisateur de service : l'agent peut redémarrer un service
-  qu'il a lui-même reconstruit, sans intervention humaine à 3 h du matin.
-- **Sa portée réelle, mesurée le 26 octobre 2026** : `(ALL) NOPASSWD: ALL`, donc **toutes** les
-  commandes, et pas seulement celles de service. Le contrôle qui pourrait compenser n'est pas en place
-  non plus : l'authentification SSH par mot de passe est **ouverte**
-  (`PasswordAuthentication yes`) et le compte `ubuntu` porte un mot de passe actif (deux clés
-  autorisées par ailleurs, et `PermitRootLogin prohibit-password`).
-- **Ce que j'en fais** : une faiblesse assumée et datée, pas une bonne pratique. Deux corrections
-  possibles, **aucune appliquée à ce jour** : restreindre le fichier `sudoers` aux commandes réellement
-  utilisées (redémarrage du service du site), et fermer l'authentification par mot de passe après avoir
-  vérifié que l'accès par clé fonctionne. La seconde touche à mon propre accès à la machine : elle ne se
-  décide pas sans son propriétaire.
+- Accès `sudo` pour l'utilisateur de service : l'agent peut redémarrer un service qu'il a lui-même
+  reconstruit, sans intervention humaine à 3 h du matin.
+- **Portée, corrigée le 26 octobre 2026.** Constat de départ, mesuré : `(ALL) NOPASSWD: ALL`, donc
+  **toutes** les commandes sans mot de passe — bien plus que ce dont l'automatisation a besoin. Portée
+  restreinte à l'usage réel, et **vérifiée dans les deux sens** : consultation d'état et redémarrage du
+  service du site **autorisés** (site reconstruit et servi en HTTP 200 après redémarrage) ; lecture de
+  `/etc/shadow`, suppression arbitraire et redémarrage d'un autre service **refusés**. La règle d'origine
+  est conservée hors service dans `/var/backups/sudoers-90-cloud-init-users`.
+- **Ce que cette restriction coûte, écrit sans le maquiller** : l'agent ne peut plus administrer la
+  machine lui-même — installer un paquet, lire un fichier système ou modifier une configuration
+  demandent désormais une intervention humaine. C'est le prix, et il est accepté comme tel. Pour
+  retrouver un chemin d'administration sans rétablir le `NOPASSWD` global : une règle
+  `ubuntu ALL=(root) ALL` **avec** mot de passe, dans le même fichier de portée.
+- **Reste ouvert, et écrit comme tel** : l'authentification SSH par mot de passe
+  (`PasswordAuthentication yes`) et le mot de passe actif du compte de service. Le durcissement est
+  préparé (fichier `sshd_config.d` : mot de passe refusé, root accessible par clé seulement) mais **non
+  appliqué** : fermer ce chemin touche à l'accès du propriétaire de la machine, donc ça ne se décide pas
+  sans lui. Deux clés sont autorisées (`fanel-vps-hermes`), et la console de l'hébergeur reste le repli
+  en cas de perte d'accès.
 
 ## 1. L'agent
 
@@ -53,7 +60,7 @@ jobbot-site.service      — JobBot V2, site public, port 80  (actif)
 ```
 
 Le second est le seul service que l'agent a construit lui-même : c'est le site du
-[cas d'usage](cases/jobbot.md). Il écoute sur le port 80 via la capacité
+[cas d'usage](../cases/jobbot.md). Il écoute sur le port 80 via la capacité
 `CAP_NET_BIND_SERVICE`, sans tourner en root, et ne contient aucun secret.
 
 ## 3. Le canal humain
@@ -74,13 +81,13 @@ Chaque accès est posé **une fois**, avec le minimum de portée :
 
 La règle, née d'un incident réel : **un jeton ne vit ni dans un dépôt, ni dans un journal, ni dans la
 conversation.** Le cas du jeton écrit en clair dans une URL de dépôt distant est raconté dans le
-[journal](ops/journal.md) — il a été trouvé et corrigé.
+[journal](../ops/journal.md) — il a été trouvé et corrigé.
 
 ## 5. Les automatisations
 
 Elles sont posées après coup, une par une, chacune avec sa raison :
 
-1. collecte et alertes d'offres → voir [JobBot](cases/jobbot.md) ;
+1. collecte et alertes d'offres → voir [JobBot](../cases/jobbot.md) ;
 2. rapports quotidiens, hebdomadaires, « dernier appel » ;
 3. purge hebdomadaire de la base (fenêtre de 7 jours, protection des offres récentes et de celles qui
    portent une action) ;

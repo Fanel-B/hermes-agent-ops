@@ -6,7 +6,7 @@ la manière dont chacune est tenue.
 
 Un garde-fou daté est plus honnête qu'un garde-fou absolu : plusieurs de ceux qui suivent sont nés d'un
 défaut constaté, et avant cette date la règle ne tenait pas. La date renvoie à l'entrée correspondante
-du [journal d'exploitation](ops/journal.md) quand elle existe.
+du [journal d'exploitation](../ops/journal.md) quand elle existe.
 
 ## 1. Aucun envoi sans un humain
 
@@ -48,7 +48,7 @@ documents ».
 *Faux positif trouvé par ce contrôle lui-même* : la comparaison se faisait par sous-chaîne, et « ML »
 (machine learning) était considéré comme maîtrisé parce que « HT**ML** » contient « ml ». Trois offres
 affichaient donc une case verte devant une compétence absente. Corrigé — la comparaison se fait
-désormais mot entier dans les deux sens. Voir le [journal, 25 octobre](ops/journal.md).
+désormais mot entier dans les deux sens. Voir le [journal, 25 octobre](../ops/journal.md).
 
 ## 4. Les secrets
 
@@ -61,7 +61,7 @@ désormais mot entier dans les deux sens. Voir le [journal, 25 octobre](ops/jour
   pour Git, un assistant de credentials lit le jeton au moment de l'usage.
 - **Incident réel** : le jeton d'un dépôt était écrit en clair dans l'URL du dépôt distant, donc
   recopiable en même temps que le dossier. Trouvé, mesuré, corrigé le 25 octobre 2026 — voir le
-  [journal](ops/journal.md).
+  [journal](../ops/journal.md).
 
 ## 5. Collecte : la légalité avant la quantité
 

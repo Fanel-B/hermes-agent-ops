@@ -4,7 +4,7 @@ Ce dépôt décrit beaucoup ce que le modèle **ne fait pas** : il ne collecte p
 n'envoie rien. Ce document décrit l'autre moitié, celle qu'on ne trouve nulle part ailleurs : **ce qui
 se passe quand il échoue**.
 
-Les manques sont écrits comme des manques. C'est l'esprit du [journal](ops/journal.md) : un lecteur
+Les manques sont écrits comme des manques. C'est l'esprit du [journal](../ops/journal.md) : un lecteur
 technique préfère « pas de chaîne de repli à ce jour » à un silence.
 
 ## Où le modèle intervient
@@ -14,8 +14,8 @@ Trois endroits, et aucun n'est dans le chemin critique des données :
 | Usage | Modèle | Chemin |
 | --- | --- | --- |
 | L'agent lui-même (conversation, tâches planifiées) | `deepseek/deepseek-v4.1-flash` (OpenRouter) | passerelle, un seul canal |
-| Rédaction des documents de candidature (CV, lettre) | CLI `claude` (Claude Code), **lancée en processus séparé** | `cv_generator.py`, `lettre_generator.py` |
-| Pitch court dans les messages Telegram | CLI `claude`, avec **repli sur un gabarit fixe** | `telegram_commands.py` |
+| Rédaction des documents de candidature (CV, lettre) | CLI `claude`, **modèle figé `opus`** (repli `sonnet`) depuis le 26/10/2026, lancée en processus séparé | `cv_generator.py`, `lettre_generator.py`, via `journal_modeles.py` |
+| Pitch court dans les messages Telegram | CLI `claude`, **même modèle figé**, avec **repli sur un gabarit fixe** | `telegram_commands.py`, via `journal_modeles.py` |
 
 Le modèle n'écrit **jamais** en base, ne calcule aucun score et ne publie rien : il propose du texte,
 un script le vérifie, puis l'écrit ou le refuse.
@@ -48,6 +48,26 @@ drapeau **BROUILLON** et l'alerte le dit.
 que le pitch vient du repli. Ici, l'échec est absorbé : mieux vaut un pitch standard qu'une absence de
 réponse.
 
+### Ce que chaque appel laisse derrière lui (ajouté le 26 octobre 2026)
+
+Avant cette date : rien. On ne pouvait pas dire quel modèle avait écrit un document, ni même qu'un
+document avait été produit par un modèle. Chaque génération écrit désormais une ligne dans
+`~/.hermes/data/job-search/logs/documents.log` :
+
+```
+2026-10-26T16:52:05  test  modele=opus  repli=sonnet  cli=2.1.289 (Claude Code)  code=1  duree=0.9s
+```
+
+Date, genre (cv / lettre / pitch), modèle demandé, repli déclaré, version de la CLI, code de retour,
+durée. Cette ligne-là a été produite par un **échec réel** — c'est la panne d'authentification décrite
+plus bas, et l'échec y est **tracé** au lieu d'être deviné.
+
+**Ce que la ligne ne dit pas** : si le repli a réellement servi. La CLI ne l'expose pas, donc c'est
+écrit *non mesurable* — pas supposé.
+
+L'appel est défini **à un seul endroit** (`journal_modeles.py`) : les trois chemins l'utilisent, aucun
+ne peut le contourner par inadvertance.
+
 ## 2. Ce qui est réessayé, et combien de fois
 
 - **Documents : aucun réessai.** Un appel, une chance. Un échec est visible immédiatement (le fichier
@@ -68,7 +88,9 @@ réponse.
 ## 4. La chaîne de repli du modèle de conversation : il n'y en a aucune
 
 **Constat, écrit tel quel** : la configuration ne déclare **aucun modèle de secours** pour la
-conversation. Si OpenRouter devient indisponible, je n'ai plus d'interlocuteur : l'agent ne bascule pas
+conversation. À ne pas confondre avec les documents, qui ont un repli **au niveau de la CLI** depuis le
+26 octobre 2026 (`opus` → `sonnet`, voir section 1) : la conversation, elle, n'en a aucun. Si OpenRouter
+devient indisponible, je n'ai plus d'interlocuteur : l'agent ne bascule pas
 sur un autre fournisseur, il s'arrête. C'est le point le plus faible de l'installation, et c'est le
 prochain chantier identifié.
 

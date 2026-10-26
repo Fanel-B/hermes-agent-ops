@@ -8,17 +8,25 @@ quelle alternative existait, et ce que ça a coûté.
 - **Défaut** : un modèle rapide et bon marché (`deepseek/deepseek-v4.1-flash` via OpenRouter), parce
   que l'immense majorité des tours sont courts : lire un fichier, lancer un script, formater un
   message.
-- **Un seul modèle est déclaré dans la configuration** : `deepseek/deepseek-v4.1-flash` via OpenRouter.
+- **Un seul modèle est déclaré dans la configuration** (`deepseek/deepseek-v4.1-flash` via OpenRouter).
   Le reste n'est pas un mécanisme mais une **convention que j'applique moi-même**, en choisissant au
-  moment de la tâche (analyse longue, raisonnement, rédaction).
+  moment de la tâche — sauf pour les documents de candidature, dont le modèle est désormais figé dans
+  le code (voir la correction ci-dessous).
 - **Correction du 26 octobre 2026.** Ce document affirmait que « les documents importants sont confiés
   à un modèle plus fort, appelé explicitement ». C'est faux sur le chemin qui compte :
   `cv_generator.py` et `lettre_generator.py` lancent
   `claude -p … --output-format text --max-turns 3|6`, **sans `--model` et sans température**. Le modèle
   est donc celui par défaut de la CLI : il n'est ni fixé, ni journalisé, et je ne peux pas prouver après
   coup quel modèle a écrit un document. J'ai corrigé la phrase plutôt que de la garder.
-- **Ce qui rendrait la phrase vraie** : passer `--model` explicitement et journaliser le modèle avec
-  chaque document produit. C'est un changement de code, pas de rédaction.
+- **Ce qui rendait la phrase fausse est corrigé dans le code, pas seulement dans le texte** (26 octobre
+  2026) : les trois chemins qui appellent un modèle (`cv_generator.py`, `lettre_generator.py`,
+  `telegram_commands.py`) passent désormais par un module unique, `journal_modeles.py`, qui **fige le
+  modèle** (`opus`), déclare un **modèle de repli** (`sonnet`, Claude Code bascule dessus si le
+  principal est surchargé ou indisponible) et **écrit une ligne de journal par génération**.
+  Première ligne réellement produite, sur l'échec d'authentification ci-dessus :
+  `modele=opus  repli=sonnet  cli=2.1.289 (Claude Code)  code=1  duree=0.9s`
+  — l'échec est désormais **tracé**, il n'est plus à deviner. Ce que la ligne ne dit pas encore : si
+  le repli a servi, parce que la CLI ne l'expose pas. C'est écrit **non mesurable**, pas supposé.
 - **État au 26 octobre 2026** : la CLI `claude` ne s'authentifie plus (« session OAuth expirée ») — la
   génération de nouveaux documents est donc indisponible jusqu'à ré-authentification. Voir
   [défaillances du modèle](defaillances-modele.md).
