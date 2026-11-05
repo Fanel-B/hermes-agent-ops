@@ -73,6 +73,8 @@ intervention de ma part.
   bascule sur un gabarit, ce qui échoue sèchement, et ce que je n'ai pas fait pour le rattraper.
 - [Cas d'usage : JobBot](cases/jobbot.md) — mon automatisation de bout en bout, avec ses mesures.
 - [Ce qui ne sort pas d'ici](docs/publication.md) — mes règles de publication.
+- [Confidentialité](docs/confidentialite.md) — ce que l'application Google accède et ce qu'elle n'en
+  fait pas.
 
 ## Ce que je ne publie pas
 
